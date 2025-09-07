@@ -1,10 +1,13 @@
 /**
- * This example turns the ESP32 into a Bluetooth LE keyboard that writes the words, presses Enter, presses a media key and then Ctrl+Alt+Delete
+ * This turns the ESP32S3 mini into a Bluetooth LE keyboard that writes passwords
+ * Author : KTB
+ * Version: V1.0
+ * Date   : 2025/09/06
  */
 #include <Adafruit_NeoPixel.h>
 #include <BleKeyboard.h>
 // #define touch_pin_numer T0
-
+#define password "AmmuParu40025."
 #define RGB_PIN 21 // Onboard RGB LED pin
 #define NUM_PIXELS 1 // Only one LED
 const int buttonPin = 4;  // the number of the pushbutton pin
@@ -26,70 +29,6 @@ void setup() {
 
 void loop() {
   if(bleKeyboard.isConnected()) {
-
-#ifdef touch_pin_numer
-    TOUCH_SENSOR_VALUE = touchRead(touch_pin_numer);
-    Serial.print(TOUCH_SENSOR_VALUE);
-    if(TOUCH_SENSOR_VALUE < VALUE_THRESHOLD)
-    {
-    ///digitalWrite(LED_PIN_NUMBER, HIGH);
-    bleKeyboard.print("AmmuParu40025.");
-    delay(1000);
-
-    //Serial.println("Sending Enter key...");
-    bleKeyboard.write(KEY_RETURN);
-
-    delay(500);
-    Serial.print("On");
-    }
-    else{
-    //digitalWrite(LED_PIN_NUMBER, LOW);
-    Serial.print("Off");
-    }
-#else
-    // read the state of the pushbutton value:
-    buttonState = digitalRead(buttonPin);
-    // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
-  if (buttonState == LOW) {
-        ///digitalWrite(LED_PIN_NUMBER, HIGH);
-    bleKeyboard.print("AmmuParu40025.");
-    delay(1000);
-
-    //Serial.println("Sending Enter key...");
-    bleKeyboard.write(KEY_RETURN);
-
-    delay(500);
-    Serial.println("On");
-  }
-#endif  
-   // Serial.println("Sending 'Hello world'...");
-   // bleKeyboard.print("Hello world");
-
-   // delay(1000);
-
-    //Serial.println("Sending Enter key...");
-   // bleKeyboard.write(KEY_RETURN);
-
-   // delay(1000);
-
-   // Serial.println("Sending Play/Pause media key...");
-   // bleKeyboard.write(KEY_MEDIA_PLAY_PAUSE);
-
-    //delay(1000);
-
-   //
-   // Below is an example of pressing multiple keyboard modifiers 
-   // which by default is commented out.
-    /*
-    Serial.println("Sending Ctrl+Alt+Delete...");
-    bleKeyboard.press(KEY_LEFT_CTRL);
-    bleKeyboard.press(KEY_LEFT_ALT);
-    bleKeyboard.press(KEY_DELETE);
-    delay(100);
-    bleKeyboard.releaseAll();
-    */
-  }else{
-    Serial.println("Waiting ...");
     static uint16_t hue = 0; // Hue goes from 0 to 65535 for full cycle
 
     // Convert HSV to RGB and set LED color
@@ -98,7 +37,41 @@ void loop() {
     pixel.show();
 
     hue += 256; // Smooth step (smaller = slower transition)
-      delay(20); // Adjust speed of transition
+    delay(20); // Adjust speed of transition
+
+#ifdef touch_pin_numer
+  TOUCH_SENSOR_VALUE = touchRead(touch_pin_numer);
+  Serial.print(TOUCH_SENSOR_VALUE);
+  if(TOUCH_SENSOR_VALUE < VALUE_THRESHOLD) {
+    ///digitalWrite(LED_PIN_NUMBER, HIGH);
+    bleKeyboard.print(password);
+    delay(1000);
+
+    //Serial.println("Sending Enter key...");
+    bleKeyboard.write(KEY_RETURN);
+
+    delay(500);
+    Serial.println("On");
+  }
+#else
+    // read the state of the pushbutton value:
+    buttonState = digitalRead(buttonPin);
+    // check if the pushbutton is pressed. If it is, the buttonState is LOW:
+  if (buttonState == LOW) {
+    bleKeyboard.print(password);
+    delay(1000);
+    bleKeyboard.write(KEY_RETURN);
+
+    delay(500);
+    Serial.println("On");
+
+  }
+#endif  
+ 
+  }else{
+    Serial.println("Waiting ...");
+    pixel.setPixelColor(0, 0);
+    pixel.show();
   }
 
   delay(250);
