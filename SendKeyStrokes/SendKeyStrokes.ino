@@ -7,7 +7,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <BleKeyboard.h>
 // #define touch_pin_numer T0
-#define password "AmmuParu40025."
+#define password "XXXXXXXXX"
 #define RGB_PIN 21 // Onboard RGB LED pin
 #define NUM_PIXELS 1 // Only one LED
 const int buttonPin = 4;  // the number of the pushbutton pin
